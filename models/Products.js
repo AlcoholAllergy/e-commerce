@@ -24,7 +24,10 @@ const Products = new mongoose.Schema({
     category: {
         type: String,
         required: [true, 'Please provide the product category'],
-        enum: ['office', 'kitchen', 'bedroom'],
+        enum: {
+            values: ['office', 'kitchen', 'bedroom'],
+            message: '{VALUE} is not supported'
+        }
     },
     company: {
         type: String,
@@ -39,11 +42,11 @@ const Products = new mongoose.Schema({
         required: true,
 
     },
-    averageRating:{
+    averageRating: {
         type: Number,
         default: 0,
     },
-    numOfReviews:{
+    numOfReviews: {
         type: Number,
         default: 0,
     },

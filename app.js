@@ -8,6 +8,13 @@ const app = express();
 //morgan for logger monitor
 const morgan = require('morgan')
 
+//security
+const rateLimiter = require('express-rate-limit')
+const helmet = require('helmet')
+const xss = require('xss-clean')
+const cors = require('cors')
+const mongoSanitize = require('express-mongo-sanitize')
+
 //image file upload
 const fileUpload = require('express-fileupload')
 
@@ -21,6 +28,7 @@ const connectDB = require('./db/connect');
 const authRoutes = require('./routes/authRoutes')
 const userRoutes = require('./routes/userRoutes')
 const reviewRoutes = require('./routes/reviewRoutes')
+const orderRoutes = require('./routes/orderRoutes')
 
 //product routes
 const productRoutes = require('./routes/productRoutes')
@@ -28,6 +36,19 @@ const productRoutes = require('./routes/productRoutes')
 //error handler and not found middleware
 const notFound = require('./middleware/not-found');
 const errorHandlerMiddleware = require('./middleware/error-handler');
+
+//ivoke security
+app.set('trust proxy',1)
+app.use(
+    rateLimiter({
+        windowMs: 15 * 60 *1000,
+        max:60,
+    })
+)
+app.use(helmet())
+app.use(cors())
+app.use(xss())
+app.use(mongoSanitize())
 
 
 //to obtain the access to the req.body
@@ -49,6 +70,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/products', productRoutes);
 app.use('/api/v1/reviews', reviewRoutes);
+app.use('/api/v1/orders', orderRoutes);
 
 
 app.use(notFound);

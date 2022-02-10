@@ -25,7 +25,7 @@ const getSingleProduct = async (req, res) => {
     if (!product) {
         throw new customErrors.NotFoundError(`No product with id: ${productId}`)
     }
-    res.status(StatusCodes.OK).json({ product })
+    res.status(StatusCodes.OK).json({ price:product.price,product })
 }
 
 const updateProduct = async (req, res) => {
